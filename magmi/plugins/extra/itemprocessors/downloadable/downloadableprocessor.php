@@ -208,8 +208,12 @@ class downloadableprocessor extends Magmi_ItemProcessor
         curl_setopt($ch, CURLOPT_NOBODY, true);
         $header = curl_exec($ch);
         curl_close($ch);
-
-        return $this->extractCustomHeader('Content-Disposition: attachment; filename=', '\n', $header);
+        $fn = $this->extractCustomHeader('Content-Disposition: attachment; filename=', '\n', $header);
+	if ($fn) {
+          return $fn;
+	} else {
+	  return basename($url);
+	}
     }
 
     private function extractCustomHeader($start, $end, $header)
